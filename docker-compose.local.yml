@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  postgres:
+    container_name: postgres
+    image: wager/postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    restart: always
+    environment:
+      POSTGRES_DB: wager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:4.23
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 15432:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
+  elsa-test:
+    container_name: elsa-test
+    image: wager/service
+    build: .
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    depends_on:
+      - "postgres"
+    links:
+      - "postgres"
+  elsa-test-2:
+    container_name: elsa-test-2
+    image: wager/service-2
+    build: .
+    ports:
+      - "9002:9002"
+    depends_on:
+      - "postgres"
+    links:
+      - "postgres"
+    environment:
+      - WS_SECOND_PORT=9002
+
+volumes:
+  postgres:
+  pgadmin:

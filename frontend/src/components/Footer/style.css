@@ -1,0 +1,27 @@
+.footerBackground {
+  min-height: 402px;
+  background: linear-gradient(
+    179.84deg,
+    #29216f 0.14%,
+    #0d0d28 157.66%
+  ) !important;
+  padding: 38px calc((100% - 1200px) / 2);
+}
+.footerBackground ul,
+li {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  color: #fff;
+  list-style-type: none;
+  margin-bottom: 1em;
+}
+.footerBackground li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+.footerBackground h6 {
+  color: #fff;
+  margin-bottom: 1em;
+}
