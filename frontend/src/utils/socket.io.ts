@@ -13,3 +13,18 @@ export const connectSocket = () => {
     socket.connect();
   }
 };
+
+
+// Singleton instance
+// let socket: Socket | null = null;
+
+// export const getSocket = (): Socket => {
+//   if (!socket) {
+//     socket = io(getWsUrl() + `?refId=${uuidv4()}`, {  
+//       autoConnect: false,
+//       withCredentials: true,
+//       transports : ['websocket'] 
+//     }); 
+//   }
+//   return socket;
+// };

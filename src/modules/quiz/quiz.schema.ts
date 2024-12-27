@@ -20,16 +20,6 @@ export class Quiz extends Document {
     userId: Types.ObjectId;
   }[];
 
-  // @Prop({
-  //   required: false,
-  //   type: [
-  //     {
-  //       userId: { type: Types.ObjectId, ref: "User" },
-  //     },
-  //   ],
-  // })
-  // @Prop({ type: [UserSchema] })
-  // participants: User[];
   @Prop({ default: Date.now })
   createdAt: Date;
 

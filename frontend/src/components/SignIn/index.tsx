@@ -8,8 +8,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import "./style.css";
 import { useSocket } from "../../context/socket-io.context";
+import { useNavigate } from "react-router-dom";
 export const SignIn = () => {
   const socket = useSocket();
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [requestConnect, setRequestConnect] = React.useState(false);
@@ -23,12 +25,20 @@ export const SignIn = () => {
 
   React.useEffect(() => {
     if (requestConnect) {
-      socket.emit("LEADERBOARD_LIST", {}, (ackResponse: string) => {
+      const input = {
+        email,
+        name,
+      };
+      socket.emit("USER_JOIN", input, (ackResponse: string) => {
         // Handle acknowledgment from the server
         console.log("Acknowledgment received:", ackResponse);
+        navigate("/onboarding");
       });
+      return () => {
+        socket.off("USER_JOIN");
+      };
     }
-  }, [email, name, requestConnect]);
+  }, [email, name, navigate, requestConnect, socket]);
   return (
     <Container
       component="main"

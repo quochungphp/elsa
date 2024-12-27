@@ -15,11 +15,11 @@ import { Socket } from "socket.io";
 import { ConfigService } from "../../shared/services/config/config.service";
 import { WebsocketExceptionsFilter } from "../../utils/exceptions/base-ws-exception";
 import { WebSocketEvent, WebSocketResponse } from "../ws/ws.type";
-import { WsSocketGateway } from "../ws/ws.gateway";
-import { CoreError } from "../../utils/exceptions/const";
 import { QuizJoinDto } from "./types/quiz.dto";
 import { QuizJoinHandler } from "./handlers/quiz-join.handler";
 import { QuizLeaveHandler } from "./handlers/quiz-leave.handler";
+import { WsBaseGateway } from "../ws/ws-base.gateway";
+import { QuizListHandler } from "./handlers/quiz-list.handler";
 
 const { corsAllowedOriginSocketConnection } = new ConfigService();
 @WebSocketGateway({
@@ -29,7 +29,7 @@ const { corsAllowedOriginSocketConnection } = new ConfigService();
 })
 @UseFilters(WebsocketExceptionsFilter)
 @UsePipes(new ValidationPipe({ transform: true }))
-export class QuizGateway extends WsSocketGateway {
+export class QuizGateway extends WsBaseGateway {
   logger: Logger = new Logger(QuizGateway.name);
 
   @Inject()
@@ -37,6 +37,9 @@ export class QuizGateway extends WsSocketGateway {
 
   @Inject()
   private quizLeaveHandler: QuizLeaveHandler;
+
+  @Inject()
+  private quizListHandler: QuizListHandler;
 
   @Inject()
   configService: ConfigService;
@@ -60,6 +63,14 @@ export class QuizGateway extends WsSocketGateway {
     socket.join(quizId);
 
     this.logger.log(`The client id: ${socket.id} joined quizId ${quizId}`);
+    return response;
+  }
+
+  @SubscribeMessage(WebSocketEvent.LIST_QUIZ)
+  async quizzes(socket: Socket): Promise<WebSocketResponse> {
+    const data = await this.quizListHandler.execute();
+    const response = this.wsResponse(data);
+    this.logger.log(`The client id: ${socket.id} gets quizzes`);
     return response;
   }
 

@@ -3,7 +3,13 @@ import { SharedWsModule } from "../../shared/shared.module";
 import { QuizLeaveHandler } from "./handlers/quiz-leave.handler";
 import { QuizJoinHandler } from "./handlers/quiz-join.handler";
 import { QuizGateway } from "./quiz.gateway";
-const handlers = [QuizGateway, QuizLeaveHandler, QuizJoinHandler];
+import { QuizListHandler } from "./handlers/quiz-list.handler";
+const handlers = [
+  QuizGateway,
+  QuizLeaveHandler,
+  QuizJoinHandler,
+  QuizListHandler,
+];
 @Module({
   imports: [SharedWsModule],
   providers: handlers,

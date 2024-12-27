@@ -25,6 +25,7 @@ export enum WebSocketEvent {
   QUIZ_CHANGE = "QUIZ_CHANGE",
   QUIZ_ADD = "QUIZ_ADD",
   LEADERBOARD_LIST = "LEADERBOARD_LIST",
+  USER_JOIN = "USER_JOIN",
 }
 
 export interface WebSocketSession {

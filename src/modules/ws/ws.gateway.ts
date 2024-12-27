@@ -1,7 +1,6 @@
 import {
   WebSocketGateway,
   OnGatewayInit,
-  WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from "@nestjs/websockets";
@@ -12,32 +11,27 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import { Socket, Server } from "socket.io";
+import { Socket } from "socket.io";
 import { WsStateService } from "./ws-state.service";
 import { RedisService } from "../../shared/services/redis/redis.service";
 import { WebsocketExceptionsFilter } from "../../utils/exceptions/base-ws-exception";
-import {
-  WebSocketErrorResponse,
-  WebSocketEvent,
-  WebSocketResponse,
-  WebSocketSession,
-} from "./ws.type";
+import { WebSocketEvent, WebSocketSession } from "./ws.type";
 import { WsRedisDispatcherService } from "./ws-redis-dispatcher.service";
 import { ConfigService } from "../../shared/services/config/config.service";
 import { WsConnectionDto } from "./dtos/ws-connection.dto";
-import { ValidationError, validate } from "class-validator";
-import { AppRequest } from "../../utils/app-request";
 import { CoreError } from "../../utils/exceptions/const";
+import { WsBaseGateway } from "./ws-base.gateway";
 /**
  * This is same API controller
  */
 @WebSocketGateway({
   cors: true,
-  transports: ['websocket', 'polling'],
+  transports: ["websocket", "polling"],
 })
 @UseFilters(WebsocketExceptionsFilter)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class WsSocketGateway
+  extends WsBaseGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   public logger: Logger = new Logger(WebSocketGateway.name);
@@ -52,8 +46,6 @@ export class WsSocketGateway
 
   @Inject()
   protected configService: ConfigService;
-
-  @WebSocketServer() server: Server;
 
   afterInit(client: Socket) {
     this.logger.log("Initialized .....");
@@ -108,44 +100,5 @@ export class WsSocketGateway
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
-  }
-
-  private async disconnect(socket: Socket) {
-    this.logger.log(`Exception server disconnect socketId: ${socket.id}`);
-    socket.disconnect();
-  }
-
-  protected wsResponse(data: any): WebSocketResponse {
-    return {
-      status: "success",
-      data: data,
-    };
-  }
-
-  protected wsError(socket: Socket, data: any) {
-    const errors = Array.isArray(data) ? data : [data];
-    const errorResponse: WebSocketErrorResponse = {
-      status: "error",
-      errors,
-    };
-    socket.emit(WebSocketEvent.ERROR, errorResponse);
-    this.disconnect(socket);
-  }
-
-  protected async wsClassValidator(
-    params: any
-  ): Promise<ValidationError[] | null> {
-    const errorsDto: ValidationError[] = await validate(params);
-
-    if (errorsDto.length > 0) {
-      const errorResponse: any = [];
-      for (const error of errorsDto) {
-        if (error.constraints) {
-          errorResponse.push(Object.values(error.constraints).shift());
-        }
-      }
-      return errorResponse;
-    }
-    return null;
   }
 }
