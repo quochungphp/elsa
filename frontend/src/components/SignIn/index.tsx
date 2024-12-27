@@ -7,19 +7,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import "./style.css";
-import { ErrorResponse } from "../../domain";
-import { useDispatch, useSelector } from "react-redux";
-import { serverApi } from "../../resources/server-api";
-import { signInByPasswordSelector } from "../../reduxStore/signin-request-by-password/sliceReducer";
-import { v4 as uuidv4 } from "uuid";
-import { getWsUrl } from "../../utils/envs";
+import { useSocket } from "../../context/socket-io.context";
 export const SignIn = () => {
-  const initialState = useSelector(signInByPasswordSelector);
+  const socket = useSocket();
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [requestConnect, setRequestConnect] = React.useState(false);
-  const [errors, setErrors] = React.useState<ErrorResponse[]>();
-  const [status, setStatus] = React.useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,39 +20,15 @@ export const SignIn = () => {
       setRequestConnect(!requestConnect);
     }
   };
-  React.useEffect(() => {
-    if (initialState.data.status) {
-      setErrors(initialState.data.errors);
-      setStatus(initialState.data.status);
-    }
-  }, [initialState]);
-
-  const accessToken = serverApi.getAccessToken();
-  React.useEffect(() => {
-    if (status === "success" || accessToken) {
-      window.location.href = "/comments";
-    }
-  }, [status, accessToken]);
-
-  //
-
-  const ws = React.useRef<WebSocket | null>(null);
 
   React.useEffect(() => {
     if (requestConnect) {
-      const url = `${getWsUrl()}?refId=${uuidv4()}&email=${email}&name=${name}`;
-      ws.current = new WebSocket(url);
-      ws.current.onopen = () => console.log("ws opened");
-      ws.current.onclose = () => console.log("ws closed");
-      ws.current.onerror = (e) => console.log(e);
-      const wsCurrent = ws.current;
-
-      return () => {
-        wsCurrent?.close();
-      };
+      socket.emit("LEADERBOARD_LIST", {}, (ackResponse: string) => {
+        // Handle acknowledgment from the server
+        console.log("Acknowledgment received:", ackResponse);
+      });
     }
   }, [email, name, requestConnect]);
-
   return (
     <Container
       component="main"

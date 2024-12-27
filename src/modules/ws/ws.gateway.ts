@@ -80,7 +80,6 @@ export class WsSocketGateway
     }
 
     const existingClientId = await this.wsStateService.getUserClientId(query);
-
     let session: WebSocketSession;
     if (existingClientId) {
       // User does not request reconnect
