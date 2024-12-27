@@ -1,3 +1,4 @@
+
 # elsa-test
 
 WebSocket-based and RESTful Web Services for wager features
@@ -132,3 +133,7 @@ npm run migration:run
     │
     └─> Type: chore, docs, feat, fix, refactor, style, ci, perf, build, or test.
 ```
+## Check list 
+![Screenshot 2024-12-27 at 10 07 01 AM](https://github.com/user-attachments/assets/6b7b56cc-efdd-4941-b144-240d8f56a941)
+![Screenshot 2024-12-27 at 10 07 11 AM](https://github.com/user-attachments/assets/2c21e1f7-e3d1-4f4f-a851-08bf48cf5612)
+
