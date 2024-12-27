@@ -133,7 +133,18 @@ npm run migration:run
     │
     └─> Type: chore, docs, feat, fix, refactor, style, ci, perf, build, or test.
 ```
-## Check list 
+## Check list
+Backend
+- Setup source
+- Websocket Io
+- Implement logic leaderboad, score, quiz, user
+## Frontend
+- Setup source code
+- Establish socket io connection
+- Implement logic and page container of leaderboard, quiz, score ... are processing
 ![Screenshot 2024-12-27 at 10 07 01 AM](https://github.com/user-attachments/assets/6b7b56cc-efdd-4941-b144-240d8f56a941)
 ![Screenshot 2024-12-27 at 10 07 11 AM](https://github.com/user-attachments/assets/2c21e1f7-e3d1-4f4f-a851-08bf48cf5612)
+<img width="1416" alt="Screenshot 2024-12-27 at 10 15 08 AM" src="https://github.com/user-attachments/assets/7cd93f67-a8a4-47f5-8c40-46b1fdd3cd55" />
+![Screenshot 2024-12-27 at 10 15 25 AM](https://github.com/user-attachments/assets/574f6ed0-402e-4619-a549-c3097ff5a7c8)
+
 
