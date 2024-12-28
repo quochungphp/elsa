@@ -4,12 +4,10 @@ import {
   UseFilters,
   UsePipes,
   ValidationPipe,
-  forwardRef,
 } from "@nestjs/common";
 import {
   SubscribeMessage,
   WebSocketGateway,
-  WsException,
 } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 import { ConfigService } from "../../shared/services/config/config.service";
@@ -66,7 +64,7 @@ export class QuizGateway extends WsBaseGateway {
     return response;
   }
 
-  @SubscribeMessage(WebSocketEvent.LIST_QUIZ)
+  @SubscribeMessage(WebSocketEvent.QUIZ_LIST)
   async quizzes(socket: Socket): Promise<WebSocketResponse> {
     const data = await this.quizListHandler.execute();
     const response = this.wsResponse(data);

@@ -10,20 +10,14 @@ import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { postLogoutPassword } from "../../reduxStore/logout/action";
 import { ACCESS_TOKEN } from "../../utils/constants";
-import SvgIcon from "@mui/material/SvgIcon";
 const pages = [
   {
-    link: "comments",
-    label: "Comments",
+    link: "onboarding",
+    label: "Onboarding",
   },
   {
     link: "sign-in",
-    label: "Sign In",
-    class: "",
-  },
-  {
-    link: "sign-up",
-    label: "Register",
+    label: "Join Quiz",
     class: "",
   },
 ];

@@ -5,9 +5,10 @@ import { LeaderboardModule } from "../leaderboard/leaderboard.module";
 import { QuizModule } from "../quiz/quiz.module";
 import { SeedService } from "../../utils/seeds/seed";
 import { UserModule } from "../user/user.module";
+import { QuestionModule } from "../question/question.module";
 
 @Module({
-  imports: [SharedWsModule, LeaderboardModule, QuizModule, UserModule],
+  imports: [SharedWsModule, LeaderboardModule, QuizModule, UserModule, QuestionModule],
   providers: [SeedService],
   controllers: [WebsocketController],
 })

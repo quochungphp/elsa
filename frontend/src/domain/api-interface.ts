@@ -68,3 +68,19 @@ export interface QuizDto {
 export interface ParticipantDto {
     _id: string;
 }
+
+
+export interface QuestionListDto {
+    status: string;
+    data:   QuestionDto[];
+}
+
+export interface QuestionDto {
+    _id:           string;
+    quizId:        string;
+    questionText:  string;
+    options:       any[];
+    correctAnswer: number;
+    createdAt:     Date;
+    __v:           number;
+}
