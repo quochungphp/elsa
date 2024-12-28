@@ -30,7 +30,6 @@ export const SignIn = () => {
         name,
       };
       socket.emit("USER_JOIN", input, (ackResponse: string) => {
-        // Handle acknowledgment from the server
         console.log("Acknowledgment received:", ackResponse);
         navigate("/onboarding");
       });

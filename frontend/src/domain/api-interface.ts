@@ -50,3 +50,21 @@ export interface CommentResponseDto {
     createdAt: Date;
     updatedAt?: Date;
 }
+
+export interface QuizzesDto {
+    status: string;
+    data:   QuizDto[];
+}
+
+export interface QuizDto {
+    _id:          string;
+    title:        string;
+    participants: ParticipantDto[];
+    createdAt:    Date;
+    updatedAt:    Date;
+    __v:          number;
+}
+
+export interface ParticipantDto {
+    _id: string;
+}
