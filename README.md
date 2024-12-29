@@ -126,3 +126,7 @@ Backend
   ![Screenshot 2024-12-28 at 9 14 24 PM](https://github.com/user-attachments/assets/84b6ca44-7f8c-4624-9319-604a0d920f00)
 
   ![Screenshot 2024-12-29 at 9 49 03 PM](https://github.com/user-attachments/assets/5426f142-a186-48e4-bea5-d6cf754c2bff)
+
+  Video introduce project
+  
+  https://drive.google.com/file/d/1Yq0Oxz6iUEuv2WxjypbEzemgg6JzHsOJ/view?usp=drive_link
