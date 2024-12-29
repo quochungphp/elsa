@@ -1,54 +1,59 @@
 version: "3.8"
 services:
-  postgres:
-    container_name: postgres
-    image: wager/postgres
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+  api:
+    container_name: api
+    image: api
     build:
       context: .
-      dockerfile: Dockerfile.db
+      dockerfile: Dockerfile
+    ports:
+      - 8585:8585
     restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: wager
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - MONGO_URI="mongodb://mongodb:27017/elsa"
+      - REDIS_HOST=redis
+      - REDIS_REPLICA_HOST=redis
+      - POSTGRES_TYPE_SYNCHRONIZE=true
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    links:
+      - "postgresql"
+      - "redis"
+  redis:
+    image: "redis:7.0.12-alpine"
+    command: redis-server
     ports:
-      - "5432:5432"
-  pgadmin:
-    image: dpage/pgadmin4:4.23
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
-      PGADMIN_DEFAULT_PASSWORD: password
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - 15432:80
+      - 6379:6379
     volumes:
-      - pgadmin:/var/lib/pgadmin
-    depends_on:
-      - postgres
-  elsa-test:
-    container_name: elsa-test
-    image: wager/service
-    build: .
+      - ./cache:/data
+    logging:
+      options:
+        max-size: 100m
+  frontend:
+    container_name: frontend
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - 3000:4033
     depends_on:
-      - "postgres"
+      - api
     links:
-      - "postgres"
-  elsa-test-2:
-    container_name: elsa-test-2
-    image: wager/service-2
-    build: .
-    ports:
-      - "9002:9002"
-    depends_on:
-      - "postgres"
-    links:
-      - "postgres"
+      - api
     environment:
-      - WS_SECOND_PORT=9002
-
-volumes:
-  postgres:
-  pgadmin:
+      - REACT_APP_SERVER_URL=http://api:8585
+      - REACT_APP_BACKEND_URL_BASE=http://api:9000
+      - REACT_APP_WS_URL_BASE=ws://api:9001
+      - REACT_APP_PUBLIC_URL=http://api:3000
+    restart: always

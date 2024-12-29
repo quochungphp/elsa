@@ -4,7 +4,6 @@
 import { Injectable } from "@nestjs/common";
 import * as fs from "fs";
 import * as path from "path";
-import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import * as dotenv from "dotenv";
 import * as dotenvExpand from "dotenv-expand";
 const config = dotenv.config();
@@ -138,31 +137,6 @@ export class ConfigService {
     return this.bool(this.envConfig["isEnableExternalError"], false);
   }
 
-  get pgPort(): number {
-    return this.int(this.envConfig["pgPort"], 5432);
-  }
-  get pgPassword(): string {
-    return this.envConfig["pgPassword"] || "postgres";
-  }
-  get pgUsername(): string {
-    return this.envConfig["pgUsername"] || "postgres";
-  }
-  get pgHost(): string {
-    // Note: when you work on local development, shoube be export IS_LOCAL_MACHINE=true before run
-    if (process.env.IS_LOCAL_MACHINE === "true") {
-      // start on separate process
-      return "localhost";
-    }
-
-    return this.envConfig["pgHost"] || "postgres";
-  }
-  get pgDatabase(): string {
-    return this.envConfig["pgDatabase"] || "postgres";
-  }
-
-  get pgEnableTypeOrmLog(): boolean {
-    return this.bool(this.envConfig["pgEnableTypeOrmLog"], true);
-  }
   get redisHost(): string {
     if (process.env.IS_LOCAL_MACHINE === "true") {
       // start on separate process
