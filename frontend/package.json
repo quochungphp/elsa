@@ -46,6 +46,7 @@
         "@types/react-credit-cards": "^0.8.1",
         "@types/redux-form": "^8.3.3",
         "@types/redux-logger": "^3.0.9",
+        "@types/uuid": "^10.0.0",
         "@types/validator": "^13.7.3",
         "react-router-dom": "^6.2.2"
     },

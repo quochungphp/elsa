@@ -1,4 +1,3 @@
-
 # elsa-test
 
 WebSocket-based and RESTful Web Services for wager features
@@ -48,54 +47,23 @@ npm install
 
 ### Docker container
 
-```bash
-# start docker container support multi instances WebSocket to verify scalability in high traffic
-$ npm run docker:start:$env
+Run docker service all in one by npm script
 
+```bash
+$ npm run docker:build:local
 ```
 
-### Local machine
+Run docker service build and run
 
 ```bash
-# A PostgreSQL instance must ready for connection on host port 5432
+$ docker compose -f docker-compose.local.yml build --no-cache
+$ docker compose -f docker-compose.local.yml  up --build
+```
+
+```bash
+# A PostgreSQL instance must ready for connection on host port 5432 and already run latest migration
 ## start docker container docker if it does not exist
-$ npm run docker:start:db
-
-# start local server
-$ npm run start:$env
-```
-
-## How to migrate your data
-
-```bash
-# Create migration file (First time only). `Always keep the file there`
-## Create the list file of migration with timestamps
-## Filename is the module/table need to migrate
-npm run migration:create --name=example
-
-
-# Generate script base on the changes from modules/table
-## Filename will be generated as: `timestamp_filename.ts`
-## Rename the Filename to: `timestamp_Update${Table}.ts`
-npm run migration:generate --name=example
-
-
-# Run this command before running `Run migration`
-## On your local environment
-export IS_LOCAL_MACHINE=true
-## Other environments
-export IS_LOCAL_MACHINE=false
-
-# Run migration
-## Execute all of command for migration for both init database and update changes
-## If the migration file name is already executed, then the scripts automatically ignore migration
-npm run migration:run:local
-
-## Run on a specific environment local | dev | stg | prod
-### Update the environment variable in the config.$env.json first
-### Run the following command. Replace $env accordingly
-npm run env:$env
-npm run migration:run
+$ npm run docker:start:redis
 ```
 
 ## API Documentation use Swagger
@@ -133,20 +101,22 @@ npm run migration:run
     │
     └─> Type: chore, docs, feat, fix, refactor, style, ci, perf, build, or test.
 ```
+
 ## Check list
+
 Backend
+
 - Setup source
 - Websocket Io
 - Implement logic leaderboad, score, quiz, user
+
 ## Frontend
+
 - Setup source code
 - Establish socket io connection
 - Implement logic and page container of leaderboard, quiz, score ... are processing
-![Screenshot 2024-12-27 at 10 07 01 AM](https://github.com/user-attachments/assets/6b7b56cc-efdd-4941-b144-240d8f56a941)
-![Screenshot 2024-12-27 at 10 07 11 AM](https://github.com/user-attachments/assets/2c21e1f7-e3d1-4f4f-a851-08bf48cf5612)
-<img width="1416" alt="Screenshot 2024-12-27 at 10 15 08 AM" src="https://github.com/user-attachments/assets/7cd93f67-a8a4-47f5-8c40-46b1fdd3cd55" />
-![Screenshot 2024-12-27 at 10 15 25 AM](https://github.com/user-attachments/assets/574f6ed0-402e-4619-a549-c3097ff5a7c8)
-![Screenshot 2024-12-28 at 9 14 24 PM](https://github.com/user-attachments/assets/84b6ca44-7f8c-4624-9319-604a0d920f00)
-
-
-
+  ![Screenshot 2024-12-27 at 10 07 01 AM](https://github.com/user-attachments/assets/6b7b56cc-efdd-4941-b144-240d8f56a941)
+  ![Screenshot 2024-12-27 at 10 07 11 AM](https://github.com/user-attachments/assets/2c21e1f7-e3d1-4f4f-a851-08bf48cf5612)
+  <img width="1416" alt="Screenshot 2024-12-27 at 10 15 08 AM" src="https://github.com/user-attachments/assets/7cd93f67-a8a4-47f5-8c40-46b1fdd3cd55" />
+  ![Screenshot 2024-12-27 at 10 15 25 AM](https://github.com/user-attachments/assets/574f6ed0-402e-4619-a549-c3097ff5a7c8)
+  ![Screenshot 2024-12-28 at 9 14 24 PM](https://github.com/user-attachments/assets/84b6ca44-7f8c-4624-9319-604a0d920f00)
