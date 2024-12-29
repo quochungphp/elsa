@@ -41,22 +41,16 @@ export interface UserSignUpPayloadDto {
     phone: string;
 }
 
-export interface CommentResponseDto {
-    id: number;
-    text: string;
-    level: number;
-    parentId: number;
-    userId: number;
-    createdAt: Date;
-    updatedAt?: Date;
-}
 
 export interface QuizzesDto {
     status: string;
-    data:   QuizDto[];
+    data:   Quiz[];
 }
-
 export interface QuizDto {
+    status: string;
+    data:   Quiz;
+}
+export interface Quiz {
     _id:          string;
     title:        string;
     participants: ParticipantDto[];
@@ -83,4 +77,18 @@ export interface QuestionDto {
     correctAnswer: number;
     createdAt:     Date;
     __v:           number;
+}
+
+export interface SigninJoin {
+    status: string;
+    data:   User;
+}
+
+export interface User {
+    _id:       string;
+    name:      string;
+    email:     string;
+    createdAt: Date;
+    updatedAt: Date;
+    __v:       number;
 }

@@ -1,13 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { userSignUpReducer } from './signup-request/sliceReducer';
 import { signInByPasswordReducer } from './signin-request-by-password/sliceReducer';
-import { fetchCommentReducer } from './comment/sliceReducer';
+import { socketEmitSigInJoinReducer } from './signin-join/sliceReducer';
 
 const rootReducer =  (state:any, action:any) => {
     return combineReducers({
         signInByPasswordReducer,
+        socketEmitSigInJoinReducer,
         userSignUpReducer,
-        fetchCommentReducer,
     })(state, action);
   };
 

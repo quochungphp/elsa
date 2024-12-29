@@ -18,6 +18,7 @@ import { QuizJoinHandler } from "./handlers/quiz-join.handler";
 import { QuizLeaveHandler } from "./handlers/quiz-leave.handler";
 import { WsBaseGateway } from "../ws/ws-base.gateway";
 import { QuizListHandler } from "./handlers/quiz-list.handler";
+import { QuizSubmitHandler } from "./handlers/quiz-submit.handler";
 
 const { corsAllowedOriginSocketConnection } = new ConfigService();
 @WebSocketGateway({
@@ -38,6 +39,8 @@ export class QuizGateway extends WsBaseGateway {
 
   @Inject()
   private quizListHandler: QuizListHandler;
+  @Inject()
+  private quizSubmitHandler: QuizSubmitHandler;
 
   @Inject()
   configService: ConfigService;
@@ -56,7 +59,6 @@ export class QuizGateway extends WsBaseGateway {
     const { quizId } = param;
     const data = await this.quizJoinHandler.execute(socket, args);
     const response = this.wsResponse(data);
-    //
     this.notifyQuizChange(data, WebSocketEvent.QUIZ_CHANGE, quizId);
     socket.join(quizId);
 
@@ -82,7 +84,15 @@ export class QuizGateway extends WsBaseGateway {
     this.notifyQuizChange(data, WebSocketEvent.QUIZ_CHANGE, quizId);
     return response;
   }
-
+  @SubscribeMessage(WebSocketEvent.QUIZ_SUBMIT)
+  async submitQuiz(socket: Socket, args: any): Promise<WebSocketResponse> {
+    const data = await this.quizSubmitHandler.execute(socket, args);
+    // broad cast all user in quizId room when new user join
+    const quizId = data.result.quiz.id.toString();
+    const response = this.wsResponse(data);
+    this.notifyQuizChange(data, WebSocketEvent.QUIZ_CHANGE, quizId);
+    return response;
+  }
   private notifyQuizChange(
     quiz: any,
     eventName = WebSocketEvent.QUIZ_CHANGE,

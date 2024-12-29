@@ -9,35 +9,40 @@ import Container from "@mui/material/Container";
 import "./style.css";
 import { useSocket } from "../../context/socket-io.context";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { socketEmitSigInJoin } from "../../reduxStore/signin-join/action";
+import { socketEmitSigInJoinSelector } from "../../reduxStore/signin-join/sliceReducer";
 export const SignIn = () => {
+  const dispatch = useDispatch();
   const socket = useSocket();
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [requestConnect, setRequestConnect] = React.useState(false);
-
+  const initialState = useSelector(socketEmitSigInJoinSelector);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email && name) {
       setRequestConnect(!requestConnect);
     }
   };
-
+  React.useEffect(() => {
+    if (initialState.isJoined) {
+      navigate("/onboarding");
+    }
+  }, [initialState, navigate]);
   React.useEffect(() => {
     if (requestConnect) {
       const input = {
         email,
         name,
       };
-      socket.emit("USER_JOIN", input, (ackResponse: string) => {
-        console.log("Acknowledgment received:", ackResponse);
-        navigate("/onboarding");
-      });
+      dispatch(socketEmitSigInJoin(input));
       return () => {
         socket.off("USER_JOIN");
       };
     }
-  }, [email, name, navigate, requestConnect, socket]);
+  }, [dispatch, email, name, requestConnect, socket]);
   return (
     <Container
       component="main"

@@ -46,7 +46,6 @@ export class UserGateway extends WsBaseGateway {
     }
     const data = await this.userJoinHandler.execute(socket, args);
     const response = this.wsResponse(data);
-
     this.logger.log(
       `The client id: ${socket.id} joined by email ${param.email}`
     );

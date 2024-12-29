@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import "./style.css";
 import { useSocket } from "../../context/socket-io.context";
-import { QuizzesDto, QuestionListDto } from "../../domain";
+import { QuizzesDto, QuestionListDto, QuizDto } from "../../domain";
 import {
   FormControl,
   InputLabel,
@@ -18,13 +18,21 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
+import { useSelector } from "react-redux";
+import { socketEmitSigInJoinSelector } from "../../reduxStore/signin-join/sliceReducer";
 
 export const Onboarding = () => {
   const socket = useSocket();
   const [quizzes, setQuizzes] = React.useState<QuizzesDto>();
+  const [quiz, setQuiz] = React.useState<QuizDto>();
   const [questions, setQuestions] = React.useState<QuestionListDto>();
   const [selectedQuiz, setSelectedQuiz] = React.useState("");
+  const [answers, setAnswers] = React.useState<{ [key: string]: number }>({});
+  const [submitted, setSubmitted] = React.useState<boolean>(false);
+  const [joined, setJoined] = React.useState<boolean>(false);
 
+  const joinedUser = useSelector(socketEmitSigInJoinSelector);
+  console.log(joinedUser);
   const handleChangeQuiz = (event: { target: { value: any } }) => {
     setSelectedQuiz(event.target.value);
   };
@@ -36,22 +44,18 @@ export const Onboarding = () => {
       socket.off("QUIZ_LIST");
     };
   }, [socket]);
-
+  // Join to quiz
   React.useEffect(() => {
-    if (selectedQuiz) {
-      const input = { quizId: selectedQuiz };
-      socket.emit("QUESTION_LIST", input, (ackResponse: QuestionListDto) => {
-        console.log(ackResponse);
-        setQuestions(ackResponse);
+    if (selectedQuiz && joined && joinedUser && joinedUser?.data?.data?._id) {
+      const input = { quizId: selectedQuiz, userId: joinedUser.data.data._id };
+      socket.emit("JOIN_QUIZ", input, (ackResponse: QuizDto) => {
+        setQuiz(ackResponse);
       });
       return () => {
-        socket.off("QUESTION_LIST");
+        socket.off("JOIN_QUIZ");
       };
     }
-  }, [selectedQuiz, socket]);
-  // State to track the selected answers
-  const [answers, setAnswers] = React.useState<{ [key: string]: number }>({});
-  const [submitted, setSubmitted] = React.useState<boolean>(false);
+  }, [joined, joinedUser, selectedQuiz, socket]);
 
   // Handle answer selection
   const handleAnswerChange = (questionId: string, answerIndex: number) => {
@@ -61,12 +65,62 @@ export const Onboarding = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = () => {
     setSubmitted(true);
   };
 
-  // Calculate score after submission
+  const handleJoin = () => {
+    setJoined(true);
+  };
+
+  //   React.useEffect(() => {
+  //     if (selectedQuiz) {
+  //       const input = { quizId: selectedQuiz };
+  //       socket.emit("QUESTION_LIST", input, (ackResponse: QuestionListDto) => {
+  //         console.log(ackResponse);
+  //         setQuestions(ackResponse);
+  //       });
+  //       return () => {
+  //         socket.off("QUESTION_LIST");
+  //       };
+  //     }
+  //   }, [joined, selectedQuiz, socket]);
+
+  React.useEffect(() => {
+    if (submitted && joined && joinedUser?.data?.data?._id && answers) {
+      const input = {
+        quizId: selectedQuiz,
+        userId: joinedUser?.data?.data?._id,
+        answers: answers,
+      };
+      socket.emit("QUIZ_SUBMIT", input, (ackResponse: any) => {
+        console.log("-->>", ackResponse);
+        // setQuestions(ackResponse);
+      });
+      return () => {
+        socket.off("QUIZ_SUBMIT");
+      };
+    }
+  }, [submitted, socket, joinedUser, selectedQuiz, answers, joined]);
+
+  // Submit to join quiz and render list questions
+  React.useEffect(() => {
+    console.log("->.", joined);
+    if (quiz && joined && joinedUser?.data?.data?._id) {
+      const input = {
+        quizId: selectedQuiz,
+        userId: joinedUser?.data?.data?._id,
+      };
+      socket.emit("QUESTION_LIST", input, (ackResponse: QuestionListDto) => {
+        console.log(ackResponse);
+        setQuestions(ackResponse);
+      });
+      return () => {
+        socket.off("QUESTION_LIST");
+      };
+    }
+  }, [joined, socket, joinedUser, selectedQuiz, quiz]);
+
   const calculateScore = () => {
     if (questions && questions.data.length) {
       return questions.data.reduce(
@@ -119,6 +173,16 @@ export const Onboarding = () => {
                     ))
                   : ""}
               </Select>
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleJoin}
+                disabled={joined}
+                fullWidth
+              >
+                Join to test
+              </Button>
             </FormControl>
           </Box>
         </Grid>
@@ -165,15 +229,17 @@ export const Onboarding = () => {
                   ))
                 : ""}
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-                disabled={submitted}
-                fullWidth
-              >
-                Submit
-              </Button>
+              {joined && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={submitted}
+                  fullWidth
+                >
+                  Submit
+                </Button>
+              )}
             </form>
           </Box>
         </Grid>

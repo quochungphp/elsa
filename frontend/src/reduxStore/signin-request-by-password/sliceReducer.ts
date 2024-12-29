@@ -4,7 +4,6 @@ import { RootState } from '../rootReducer';
 import { RequestState, RequestStatus } from '../types';
 import { UserResponseDto } from '../../domain';
 import { postSignInByPassword } from './action';
-import { ACCESS_TOKEN } from '../../utils/constants';
 
 export interface SignInByPasswordState extends RequestState {
     data: UserResponseDto;

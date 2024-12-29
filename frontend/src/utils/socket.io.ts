@@ -14,17 +14,14 @@ export const connectSocket = () => {
   }
 };
 
-
-// Singleton instance
-// let socket: Socket | null = null;
-
-// export const getSocket = (): Socket => {
-//   if (!socket) {
-//     socket = io(getWsUrl() + `?refId=${uuidv4()}`, {  
-//       autoConnect: false,
-//       withCredentials: true,
-//       transports : ['websocket'] 
-//     }); 
-//   }
-//   return socket;
-// };
+export const emitWithAck = (socket:Socket, event:any, payload:any) => {
+  return new Promise((resolve, reject) => {
+    socket.emit(event, payload, (ackResponse:any) => {
+      if (ackResponse.error) {
+        reject(ackResponse.error);
+      } else {
+        resolve(ackResponse);
+      }
+    });
+  });
+};

@@ -16,8 +16,8 @@ export const userConnectionKey = (
   query: WsConnectionDto,
   wsClientId?: string
 ): string => {
-  const { email } = query;
-  return `elsa:connected:${wsClientId}:${email}`;
+  const { refId } = query;
+  return `elsa:connected:${refId}`;
 };
 
 export const senderNonceKey = (starkKey: string): string => {

@@ -37,7 +37,6 @@ export class QuestionGateway extends WsBaseGateway {
   ): Promise<WebSocketResponse> {
     const data = await this.questionListHandler.execute(args);
     const response = this.wsResponse(data);
-    console.log(args)
     this.logger.log(
       `The client id: ${socket.id} gets questions`
     );
