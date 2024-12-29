@@ -1,6 +1,6 @@
 # elsa-test
 
-WebSocket-based and RESTful Web Services for wager features
+Websocket English test exam - Leaderboard & Quizzes
 
 ## Prerequisites
 
@@ -116,14 +116,13 @@ Backend
 - Establish socket io connection
 - Implement logic and page container of leaderboard, quiz, score ... are processing
   ![Screenshot 2024-12-27 at 10 07 01 AM](https://github.com/user-attachments/assets/6b7b56cc-efdd-4941-b144-240d8f56a941)
-  
+
   ![Screenshot 2024-12-27 at 10 07 11 AM](https://github.com/user-attachments/assets/2c21e1f7-e3d1-4f4f-a851-08bf48cf5612)
-  
+
   <img width="1416" alt="Screenshot 2024-12-27 at 10 15 08 AM" src="https://github.com/user-attachments/assets/7cd93f67-a8a4-47f5-8c40-46b1fdd3cd55" />
-  
+
   ![Screenshot 2024-12-27 at 10 15 25 AM](https://github.com/user-attachments/assets/574f6ed0-402e-4619-a549-c3097ff5a7c8)
-  
+
   ![Screenshot 2024-12-28 at 9 14 24 PM](https://github.com/user-attachments/assets/84b6ca44-7f8c-4624-9319-604a0d920f00)
 
   ![Screenshot 2024-12-29 at 9 49 03 PM](https://github.com/user-attachments/assets/5426f142-a186-48e4-bea5-d6cf754c2bff)
-
