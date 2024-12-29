@@ -92,3 +92,50 @@ export interface User {
     updatedAt: Date;
     __v:       number;
 }
+
+
+export interface LeaderboadUpdateDto {
+    status: string;
+    data:   LeaderboadData;
+}
+
+export interface LeaderboadData {
+    result:  Result;
+    quizzes: Score[];
+}
+
+export interface Score {
+    _id:       string;
+    quiz:      string;
+    user:      string;
+    score:     number;
+    createdAt: Date;
+    updatedAt: Date;
+    endedAt:   null;
+    __v:       number;
+}
+
+export interface Result {
+    quiz:      ResultQuiz;
+    user:      string;
+    score:     number;
+    createdAt: Date;
+    updatedAt: Date;
+    endedAt:   null;
+    _id:       string;
+    __v:       number;
+}
+
+export interface ResultQuiz {
+    _id:          string;
+    title:        string;
+    participants: Participant[];
+    createdAt:    Date;
+    updatedAt:    Date;
+    __v:          number;
+}
+
+export interface Participant {
+    _id:     string;
+    userId?: string;
+}

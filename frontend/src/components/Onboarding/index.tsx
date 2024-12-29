@@ -6,7 +6,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import "./style.css";
 import { useSocket } from "../../context/socket-io.context";
-import { QuizzesDto, QuestionListDto, QuizDto } from "../../domain";
+import {
+  QuizzesDto,
+  QuestionListDto,
+  QuizDto,
+  LeaderboadUpdateDto,
+} from "../../domain";
 import {
   FormControl,
   InputLabel,
@@ -17,6 +22,13 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { socketEmitSigInJoinSelector } from "../../reduxStore/signin-join/sliceReducer";
@@ -24,6 +36,7 @@ import { socketEmitSigInJoinSelector } from "../../reduxStore/signin-join/sliceR
 export const Onboarding = () => {
   const socket = useSocket();
   const [quizzes, setQuizzes] = React.useState<QuizzesDto>();
+  const [submitResult, setSubmitResult] = React.useState();
   const [quiz, setQuiz] = React.useState<QuizDto>();
   const [questions, setQuestions] = React.useState<QuestionListDto>();
   const [selectedQuiz, setSelectedQuiz] = React.useState("");
@@ -32,10 +45,23 @@ export const Onboarding = () => {
   const [joined, setJoined] = React.useState<boolean>(false);
 
   const joinedUser = useSelector(socketEmitSigInJoinSelector);
-  console.log(joinedUser);
   const handleChangeQuiz = (event: { target: { value: any } }) => {
     setSelectedQuiz(event.target.value);
   };
+  const [leaderboard, setLeaderboard] = React.useState<LeaderboadUpdateDto>();
+
+  React.useEffect(() => {
+    // Listen for leaderboard updates
+    socket.on("LEADERBOARD_SCORE_UPDATE", (res) => {
+      console.log(res);
+      setLeaderboard(res);
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("LEADERBOARD_SCORE_UPDATE");
+    };
+  }, [socket]);
   React.useEffect(() => {
     socket.emit("QUIZ_LIST", {}, (ackResponse: QuizzesDto) => {
       setQuizzes(ackResponse);
@@ -72,20 +98,7 @@ export const Onboarding = () => {
   const handleJoin = () => {
     setJoined(true);
   };
-
-  //   React.useEffect(() => {
-  //     if (selectedQuiz) {
-  //       const input = { quizId: selectedQuiz };
-  //       socket.emit("QUESTION_LIST", input, (ackResponse: QuestionListDto) => {
-  //         console.log(ackResponse);
-  //         setQuestions(ackResponse);
-  //       });
-  //       return () => {
-  //         socket.off("QUESTION_LIST");
-  //       };
-  //     }
-  //   }, [joined, selectedQuiz, socket]);
-
+  // Submit result
   React.useEffect(() => {
     if (submitted && joined && joinedUser?.data?.data?._id && answers) {
       const input = {
@@ -94,8 +107,7 @@ export const Onboarding = () => {
         answers: answers,
       };
       socket.emit("QUIZ_SUBMIT", input, (ackResponse: any) => {
-        console.log("-->>", ackResponse);
-        // setQuestions(ackResponse);
+        setSubmitResult(ackResponse);
       });
       return () => {
         socket.off("QUIZ_SUBMIT");
@@ -105,14 +117,12 @@ export const Onboarding = () => {
 
   // Submit to join quiz and render list questions
   React.useEffect(() => {
-    console.log("->.", joined);
     if (quiz && joined && joinedUser?.data?.data?._id) {
       const input = {
         quizId: selectedQuiz,
         userId: joinedUser?.data?.data?._id,
       };
       socket.emit("QUESTION_LIST", input, (ackResponse: QuestionListDto) => {
-        console.log(ackResponse);
         setQuestions(ackResponse);
       });
       return () => {
@@ -141,6 +151,52 @@ export const Onboarding = () => {
     >
       <CssBaseline />
       <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Box sx={{ border: "1px solid #ccc" }} padding={2} borderRadius={2}>
+            <Typography component="h1" variant="h5" mb={1}>
+              <br />
+              Leaderboard Score
+            </Typography>
+          </Box>
+          <Box sx={{ border: "1px solid #ccc" }} padding={2} borderRadius={2}>
+            {leaderboard && (
+              <TableContainer
+                component={Paper}
+                style={{ marginTop: 20, maxWidth: 600, margin: "0 auto" }}
+              >
+                <Typography variant="h5" align="center" style={{ padding: 16 }}>
+                  Quiz Leaderboard
+                </Typography>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Rank</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>User</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Score</strong>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {leaderboard.data.quizzes
+                      .sort((a, b) => b.score - a.score) // Sort by score descending
+                      .map((record, index) => (
+                        <TableRow key={record._id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{record.user}</TableCell>
+                          <TableCell>{record.score}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </Box>
+        </Grid>
         <Grid item xs={3}>
           <Box sx={{ border: "1px solid #ccc" }} padding={2} borderRadius={2}>
             <Typography component="h1" variant="h5" mb={1}>

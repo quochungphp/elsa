@@ -27,9 +27,6 @@ export class QuizSubmitHandler {
     const { quizId, userId, answers } = args;
     const questionIds = Object.keys(answers);
     const correctAnswer = new Map();
-    // answers.forEach(a => {
-    //   correctAnswer.set(a.questionId, a.correctAnswer)
-    // })
     let score = 0;
 
     try {
@@ -60,7 +57,7 @@ export class QuizSubmitHandler {
         createdAt: Date.now(),
         updatedAt: Date.now(),
       });
-      const quizzes = await this.scoreRepository.ScoreModel.find({quiz})
+      const quizzes = await this.scoreRepository.ScoreModel.find({quiz}).sort({ score: -1, createdAt: 1 });
       return {
         result,
         quizzes

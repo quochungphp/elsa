@@ -91,6 +91,8 @@ export class QuizGateway extends WsBaseGateway {
     const quizId = data.result.quiz.id.toString();
     const response = this.wsResponse(data);
     this.notifyQuizChange(data, WebSocketEvent.QUIZ_CHANGE, quizId);
+    // Realtime update
+    this.server.emit(WebSocketEvent.LEADERBOARD_SCORE_UPDATE, response);
     return response;
   }
   private notifyQuizChange(
