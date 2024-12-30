@@ -1,5 +1,11 @@
 import { Type } from "class-transformer";
-import { ArrayNotEmpty, IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 
 export class QuizJoinDto {
   @IsString()
@@ -9,8 +15,7 @@ export class QuizJoinDto {
   quizId: string;
 }
 
-
-class AnswerDto {  
+class AnswerDto {
   @IsNumber()
   value: number;
 }

@@ -22,7 +22,7 @@ export class QuestionRepository {
     return this.QuestionModel.findById(id).exec();
   }
   async findAllById(quizId: string): Promise<Question[]> {
-    return this.QuestionModel.find({quizId}).exec();
+    return this.QuestionModel.find({ quizId }).exec();
   }
   async update(id: string, data: Partial<Question>): Promise<Question | null> {
     return this.QuestionModel.findByIdAndUpdate(id, data, { new: true }).exec();

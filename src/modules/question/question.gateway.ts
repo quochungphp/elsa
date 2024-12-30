@@ -31,15 +31,10 @@ export class QuestionGateway extends WsBaseGateway {
   configService: ConfigService;
 
   @SubscribeMessage(WebSocketEvent.QUESTION_LIST)
-  async questionList(
-    socket: Socket,
-    args: any
-  ): Promise<WebSocketResponse> {
+  async questionList(socket: Socket, args: any): Promise<WebSocketResponse> {
     const data = await this.questionListHandler.execute(args);
     const response = this.wsResponse(data);
-    this.logger.log(
-      `The client id: ${socket.id} gets questions`
-    );
+    this.logger.log(`The client id: ${socket.id} gets questions`);
     return response;
   }
 }

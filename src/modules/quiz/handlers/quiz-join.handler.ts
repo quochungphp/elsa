@@ -33,7 +33,9 @@ export class QuizJoinHandler {
         throw new CoreException(CoreError.USER_SESSION_NOT_FOUND);
       }
 
-      const exitedUser = quiz.participants.some((p) => p?.userId?.equals(userId));
+      const exitedUser = quiz.participants.some((p) =>
+        p?.userId?.equals(userId)
+      );
       if (exitedUser) {
         return quiz;
       }

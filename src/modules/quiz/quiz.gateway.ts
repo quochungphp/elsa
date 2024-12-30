@@ -5,10 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-} from "@nestjs/websockets";
+import { SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 import { ConfigService } from "../../shared/services/config/config.service";
 import { WebsocketExceptionsFilter } from "../../utils/exceptions/base-ws-exception";

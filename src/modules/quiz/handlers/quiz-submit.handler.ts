@@ -23,7 +23,10 @@ export class QuizSubmitHandler {
     private wsStateService: WsStateService
   ) {}
 
-  async execute(socket: Socket, args: QuizSubmitDto): Promise<{result: Score, quizzes: Score[]}> {
+  async execute(
+    socket: Socket,
+    args: QuizSubmitDto
+  ): Promise<{ result: Score; quizzes: Score[] }> {
     const { quizId, userId, answers } = args;
     const questionIds = Object.keys(answers);
     const correctAnswer = new Map();
@@ -41,27 +44,36 @@ export class QuizSubmitHandler {
         throw new CoreException(CoreError.USER_SESSION_NOT_FOUND);
       }
 
-      const exitedUser = quiz.participants.find((p) => p?.userId?.equals(userId));
-      const questions = await this.questionRepository.QuestionModel.find({ id: { $in: questionIds } })
+      const exitedUser = quiz.participants.find((p) =>
+        p?.userId?.equals(userId)
+      );
+      const questions = await this.questionRepository.QuestionModel.find({
+        id: { $in: questionIds },
+      });
       if (questions.length) {
         for (const q of questions) {
-          if (correctAnswer.get(q.id) && correctAnswer.get(q.id)=== q.correctAnswer ) {
+          if (
+            correctAnswer.get(q.id) &&
+            correctAnswer.get(q.id) === q.correctAnswer
+          ) {
             score++;
           }
         }
       }
       const result = await this.scoreRepository.ScoreModel.create({
         quiz: quiz,
-        user: exitedUser ,
+        user: exitedUser,
         score,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       });
-      const quizzes = await this.scoreRepository.ScoreModel.find({quiz}).sort({ score: -1, createdAt: 1 });
+      const quizzes = await this.scoreRepository.ScoreModel.find({ quiz }).sort(
+        { score: -1, createdAt: 1 }
+      );
       return {
         result,
-        quizzes
-      }
+        quizzes,
+      };
     } catch (error) {
       this.logger.error(error);
       throw error;

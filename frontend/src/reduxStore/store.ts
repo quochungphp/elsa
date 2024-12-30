@@ -15,14 +15,6 @@ const store = configureStore({
     preloadedState: loadState(),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, unauthorizedMiddleware),
 });
-
-// Subscribe dispatch action and save state into local storage
-store.subscribe(() => {
-    saveState({
-        signInByPasswordReducer: store.getState().signInByPasswordReducer,
-        userSignUpReducer: store.getState().userSignUpReducer,
-    });
-});
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk = ThunkAction<void, RootState, unknown, Action>;
 export const useAppDispatch = () => useDispatch();

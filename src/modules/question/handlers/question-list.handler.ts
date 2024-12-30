@@ -8,7 +8,7 @@ export class QuestionListHandler {
 
   constructor(private questionRepository: QuestionRepository) {}
 
-  async execute(args: {quizId: string}): Promise<Question[]> {
+  async execute(args: { quizId: string }): Promise<Question[]> {
     try {
       return this.questionRepository.findAllById(args.quizId);
     } catch (error) {

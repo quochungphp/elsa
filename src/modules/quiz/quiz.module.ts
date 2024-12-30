@@ -10,7 +10,7 @@ const handlers = [
   QuizLeaveHandler,
   QuizJoinHandler,
   QuizListHandler,
-  QuizSubmitHandler
+  QuizSubmitHandler,
 ];
 @Module({
   imports: [SharedWsModule],

@@ -8,7 +8,13 @@ import { UserModule } from "../user/user.module";
 import { QuestionModule } from "../question/question.module";
 
 @Module({
-  imports: [SharedWsModule, LeaderboardModule, QuizModule, UserModule, QuestionModule],
+  imports: [
+    SharedWsModule,
+    LeaderboardModule,
+    QuizModule,
+    UserModule,
+    QuestionModule,
+  ],
   providers: [SeedService],
   controllers: [WebsocketController],
 })
