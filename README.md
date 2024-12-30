@@ -43,6 +43,14 @@ npm install
 |   └── config.prod.json
 ```
 
+### npm start projects
+
+```bash
+$ npm run start:local
+
+$ cd/frontend npm run start
+```
+
 ## Running the app on a specific environment
 
 ### Docker container
@@ -128,5 +136,5 @@ Backend
   ![Screenshot 2024-12-29 at 9 49 03 PM](https://github.com/user-attachments/assets/5426f142-a186-48e4-bea5-d6cf754c2bff)
 
   Video introduce project
-  
+
   https://drive.google.com/file/d/1Yq0Oxz6iUEuv2WxjypbEzemgg6JzHsOJ/view?usp=drive_link

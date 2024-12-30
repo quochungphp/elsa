@@ -45,3 +45,5 @@ coverage
 
 # gitlab ci local
 .gitlab-ci-local
+mongo-data
+cache/dump.rdb

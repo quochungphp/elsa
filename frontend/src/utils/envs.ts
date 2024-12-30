@@ -3,7 +3,7 @@ export const getEnv = () => {
 };
 
 export const getServerUrl = (): string | undefined => {
-    return process.env.REACT_APP_SERVER_URL || 'http://localhost:8585';
+    return process.env.REACT_APP_SERVER_URL || 'http://localhost:9000';
 };
 
 export const getWsUrl = () => {

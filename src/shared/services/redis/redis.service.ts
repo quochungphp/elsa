@@ -113,7 +113,7 @@ export class RedisService {
 
   async getValue<T>(key: string): Promise<T | undefined> {
     const value = await this.redisReplica.get(key);
-    return value ? JSON.parse(value) : null;
+    return value ? JSON.parse(value) : undefined;
   }
 
   async deleteValue(key: string) {

@@ -7,6 +7,12 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
   api:
     container_name: api
     image: api
@@ -14,24 +20,24 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8585:8585
+      - 9000:9000
+      - 9001:9001
     restart: always
     env_file:
       - .env
     environment:
-      - MONGO_URI="mongodb://mongodb:27017/elsa"
-      - REDIS_HOST=redis
-      - REDIS_REPLICA_HOST=redis
-      - POSTGRES_TYPE_SYNCHRONIZE=true
+      MONGO_URI: "mongodb://mongodb:27017/elsa"
+      REDIS_HOST: redis
+      REDIS_REPLICA_HOST: redis
     depends_on:
-      mongodb:
-        condition: service_healthy
+      - mongodb
+      - redis
     links:
-      - "postgresql"
+      - "mongodb"
       - "redis"
   redis:
     image: "redis:7.0.12-alpine"
-    command: redis-server
+    command: redis-server --requirepass localhost
     ports:
       - 6379:6379
     volumes:
@@ -52,8 +58,8 @@ services:
     links:
       - api
     environment:
-      - REACT_APP_SERVER_URL=http://api:8585
-      - REACT_APP_BACKEND_URL_BASE=http://api:9000
-      - REACT_APP_WS_URL_BASE=ws://api:9001
-      - REACT_APP_PUBLIC_URL=http://api:3000
+      REACT_APP_SERVER_URL: "http://api:9000"
+      REACT_APP_BACKEND_URL_BASE: "http://api:9000"
+      REACT_APP_WS_URL_BASE: "ws://api:9001"
+      REACT_APP_PUBLIC_URL: "http://api:3000"
     restart: always

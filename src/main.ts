@@ -49,9 +49,11 @@ export class App {
       const logMessage = `Websocket server started host: ${host}:${wsPort}`;
       await app
         .listen(wsPort, () => {
+          console.log(logMessage)
           this.logger.log(logMessage);
         })
         .catch((error) => {
+          console.log(">>>>>>>11>", error)
           this.logger.error(
             {
               error: error,
@@ -62,10 +64,7 @@ export class App {
           process.exit(1);
         });
     } catch (error) {
-      this.logger.error({
-        error,
-        message: "Start websocket error",
-      });
+      throw error;
     }
   }
 
